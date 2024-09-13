@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PurchasingController;
+use App\Models\Purchasing;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('supplier', SupplierController::class);
     Route::resource('purchasing', PurchasingController::class);
     Route::post('/purchasing/{id}/status', [PurchasingController::class, 'updateStatus'])->name('purchasingStatus');
+
+    Route::get('/laporanpembelian', [PurchasingController::class, 'laporanpembelian'])->name('laporanpembelian');
+    Route::post('/datapembelian', [PurchasingController::class, 'datapembelian'])->name('datapembelian');
     // Route::resource('jabatan', JabatanController::class);
     // Route::resource('perjadin', PerjadinController::class);
     // Route::get('/laporanPerjadin', [PerjadinController::class, 'laporanPerjadin'])->name('laporanPerjadin');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Supplier;
 use App\Models\Purchasing;
 use Illuminate\Http\Request;
@@ -61,6 +62,49 @@ class PurchasingController extends Controller
         Purchasing::create($attr);
 
         return back()->with('message', 'Purchasing Order berhasil diajukan');
+    }
+
+    public function laporanpembelian()
+    {
+        return view('laporan.laporanpembelian', [
+            'title'         => 'Form Laporan Pembelian',
+        ]);
+    }
+
+    public function datapembelian(Request $request)
+    {
+        // Validate the date inputs
+        $request->validate([
+            'start_date'    => 'required|date',
+            'end_date'      => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $startDate = Carbon::parse($request->input('start_date'));
+        $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+
+        // Get all purchasing records within the date range
+        $purchasing = Purchasing::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        // Calculate total purchases
+        $totalPurchases = $purchasing->count();
+
+        // Filter and count accepted purchases (status 'setuju')
+        $acceptedPurchases = $purchasing->where('status', 'setuju');
+        $totalAcceptedPurchases = $acceptedPurchases->count();
+
+        // Calculate the total price of accepted purchases
+        $totalAcceptedPrice = $acceptedPurchases->sum('total_harga');
+
+        return view('laporan.datapembelian', [
+            'title'                 => 'Laporan Pengajuan Pembelian',
+            'startDate'             => $startDate,
+            'endDate'               => $endDate,
+            'purchasing'            => $purchasing,
+            'dateRange'             => $startDate->format('d F Y') . ' - ' . $endDate->format('d F Y'),
+            'totalPurchases'        => $totalPurchases,
+            'totalAcceptedPurchases' => $totalAcceptedPurchases,
+            'totalAcceptedPrice'    => $totalAcceptedPrice,
+        ]);
     }
 
     public function show(Purchasing $purchasing)

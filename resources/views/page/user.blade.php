@@ -3,7 +3,15 @@
 	<section class="section">
 		<div class="row">
 			<div class="col-lg-12">
-
+				@if ($errors->any())
+					<div class="alert alert-danger">
+						<ul>
+							@foreach ($errors->all() as $error)
+								<li>{{ $error }}</li>
+							@endforeach
+						</ul>
+					</div>
+				@endif
 				<div class="card">
 					<div class="card-header">
 						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd"><i

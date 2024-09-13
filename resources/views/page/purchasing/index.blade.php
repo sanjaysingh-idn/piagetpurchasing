@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-lg-12">
 
-				<div class="card">
+				<div class="card mb-3">
 					<div class="card-header">
 						<h3>Daftar Pengajuan Pembelian Barang</h3>
 						<hr>
@@ -48,7 +48,11 @@
 												<span class="badge bg-label-danger me-1">{{ $item->status }}</span>
 											@endif
 										</td>
-										<td>{{ $item->input_by }}</td>
+										<td>
+											{{ $item->input_by }}
+											<br>
+											<small>{{ $item->created_at->format('d F Y H:i') }}</small>
+										</td>
 										<td>
 											<button class="btn btn-primary btn-xs" data-bs-toggle="modal"
 												data-bs-target="#modalStatus{{ $item->id }}"><i class="bx bx-pen me-1"></i> Ubah Status</button>

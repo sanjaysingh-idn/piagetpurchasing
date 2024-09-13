@@ -62,15 +62,15 @@
 			</ul>
 		</li>
 
-		<li class="menu-item {{ request()->is('laporan', 'laporan/create', 'history') ? 'active open' : '' }}">
+		<li class="menu-item {{ request()->is('laporanpembelian', 'datapembelian') ? 'active open' : '' }}">
 			<a href="javascript:void(0);" class="menu-link menu-toggle">
 				<i class='menu-icon tf-icons bx bxs-report'></i>
 				<div>Laporan</div>
 			</a>
-			<ul class="menu-sub">
-				<li class="menu-item {{ request()->is('laporan', 'laporan/create') ? 'active' : '' }}">
-					<a href="/" class="menu-link">
-						<div>Daftar Supplier</div>
+			<ul class="menu-sub ">
+				<li class="menu-item {{ request()->is('laporanpembelian', 'datapembelian') ? 'active' : '' }}">
+					<a href="/laporanpembelian" class="menu-link">
+						<div>Laporan Pembelian</div>
 					</a>
 				</li>
 			</ul>
