@@ -59,10 +59,14 @@
 										</td>
 										<td>{{ $item->kontak }}</td>
 										<td>
-											<a class="btn btn-xs btn-warning" href="{{ route('user.edit', $item->id, '.edit') }}"><i
-													class="bx bx-edit-alt me-1"></i> Edit</a>
+											<button class="btn btn-xs btn-warning" data-bs-toggle="modal" data-bs-target="#modalEdit{{ $item->id }}">
+												<i class="bx bx-edit-alt me-1"></i> Edit
+											</button>
+
 											<button class="btn btn-xs btn-danger" data-bs-toggle="modal"
-												data-bs-target="#modalDelete{{ $item->id }}"><i class="bx bx-trash me-1"></i> Delete</button>
+												data-bs-target="#modalDelete{{ $item->id }}">
+												<i class="bx bx-trash me-1"></i> Delete
+											</button>
 										</td>
 									</tr>
 								@endforeach
@@ -178,6 +182,67 @@
 			</div>
 		</div>
 	</div>
+
+	@foreach ($users as $item)
+		{{-- Modal Edit --}}
+		<div class="modal fade" id="modalEdit{{ $item->id }}" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Akun: {{ $item->name }}</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<form action="{{ route('user.update', $item->id) }}" method="POST">
+						@csrf
+						@method('PUT')
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6 mb-3">
+									<label class="form-label">Nama</label>
+									<input class="form-control" type="text" name="name" value="{{ $item->name }}" required />
+								</div>
+								<div class="col-sm-6 mb-3">
+									<label class="form-label">NIP</label>
+									<input class="form-control" type="text" name="nip" value="{{ $item->nip }}" />
+								</div>
+								<div class="col-sm-6 mb-3">
+									<label class="form-label">Jabatan</label>
+									<input class="form-control" type="text" name="jabatan" value="{{ $item->jabatan }}" />
+								</div>
+								<div class="col-sm-6 mb-3">
+									<label class="form-label">Email</label>
+									<input class="form-control" type="email" name="email" value="{{ $item->email }}" required />
+								</div>
+								<div class="col-sm-6 mb-3">
+									<label class="form-label">No. HP</label>
+									<input class="form-control" type="number" name="kontak" value="{{ $item->kontak }}" />
+								</div>
+								<div class="col-sm-6 mb-3">
+									<label class="form-label">Role</label>
+									<select class="form-select" name="role" required>
+										@foreach ($role as $r)
+											<option value="{{ $r }}" {{ $item->role == $r ? 'selected' : '' }}>{{ $r }}</option>
+										@endforeach
+									</select>
+								</div>
+								<div class="col-12">
+									<small class="text-danger">*Kosongkan password jika tidak ingin mengubahnya.</small>
+								</div>
+								<div class="col-sm-6 mb-3">
+									<label class="form-label">Password Baru</label>
+									<input class="form-control" type="password" name="password" />
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+							<button type="submit" class="btn btn-primary"><i class="bx bx-save"></i> Simpan Perubahan</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	@endforeach
 
 	@foreach ($users as $item)
 		<div class="modal fade" id="modalDelete{{ $item->id }}" tabindex="-1" aria-modal="true">

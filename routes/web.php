@@ -34,12 +34,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/laporanpembelian', [PurchasingController::class, 'laporanpembelian'])->name('laporanpembelian');
     Route::post('/datapembelian', [PurchasingController::class, 'datapembelian'])->name('datapembelian');
-    // Route::resource('jabatan', JabatanController::class);
-    // Route::resource('perjadin', PerjadinController::class);
-    // Route::get('/laporanPerjadin', [PerjadinController::class, 'laporanPerjadin'])->name('laporanPerjadin');
-    // Route::post('/generate-report', [PerjadinController::class, 'generateReport'])->name('generateReport');
-
-    // Route::get('/perjadin/{id}/bukti', [PerjadinController::class, 'buktiPerjadin'])->name('perjadin.bukti');
-    // Route::post('/bukti/store', [PerjadinController::class, 'storeBukti'])->name('bukti.store');
-    // Route::delete('bukti/{id}', [PerjadinController::class, 'destroyBukti'])->name('bukti.destroy');
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile.index');
+    Route::put('/profile/update', [UserController::class, 'profileUpdate'])->name('profile.update');
 });
