@@ -47,9 +47,8 @@ class PurchasingController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
+        // 1. Validasi input (nomor_po dihapus dari required karena di-generate otomatis)
         $attr = $request->validate([
-            'nomor_po'      => 'required',
             'nama_barang'   => 'required',
             'qty'           => 'required',
             'harga'         => 'required',
@@ -59,9 +58,42 @@ class PurchasingController extends Controller
             'input_by'      => 'nullable',
         ]);
 
+        // 2. Logika pembuatan komponen format PO
+        $now = Carbon::now();
+        $tahun = $now->format('Y');      // Contoh: 2026
+        $tanggal = $now->format('d');    // Contoh: 15
+
+        // Mengubah angka bulan ke Romawi
+        $array_romawi = [1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 11 => 'XI', 12 => 'XII'];
+        $bulanRomawi = $array_romawi[$now->month];
+
+        // 3. Menentukan Nomor Urut (Reset otomatis setiap hari)
+        $hariIni = $now->toDateString(); // Format: YYYY-MM-DD
+
+        // Cari data terakhir yang dibuat pada hari ini
+        $poTerakhir = Purchasing::whereDate('created_at', $hariIni)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($poTerakhir) {
+            // Mengambil 3 digit terakhir dari nomor_po lama, lalu ditambah 1
+            $noUrutTerakhir = substr($poTerakhir->nomor_po, -3);
+            $nomorUrut = str_pad((int)$noUrutTerakhir + 1, 3, '0', STR_PAD_LEFT);
+        } else {
+            // Jika belum ada transaksi sama sekali hari ini, mulai dari 001
+            $nomorUrut = '001';
+        }
+
+        // 4. Gabungkan menjadi format: PO / Tahun / Bulan Romawi / Tanggal / Nomor Urut
+        $nomorPO = "PO/{$tahun}/{$bulanRomawi}/{$tanggal}/{$nomorUrut}";
+
+        // 5. Masukkan nomor_po hasil generate ke dalam array data
+        $attr['nomor_po'] = $nomorPO;
+
+        // 6. Simpan ke database
         Purchasing::create($attr);
 
-        return back()->with('message', 'Purchasing Order berhasil diajukan');
+        return back()->with('message', 'Purchasing Order berhasil diajukan dengan nomor: ' . $nomorPO);
     }
 
     public function laporanpembelian()

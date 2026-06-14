@@ -133,7 +133,12 @@
 		<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 		<script>
 			$(document).ready(function() {
-				$('#dtable').DataTable({});
+				$('#dtable').DataTable({
+					// Mengurutkan berdasarkan kolom indeks ke-7 (Diajukan) secara Descending (terbaru)
+					"order": [
+						[7, "desc"]
+					]
+				});
 			});
 		</script>
 		@stack('scripts')

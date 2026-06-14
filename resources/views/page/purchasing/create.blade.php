@@ -19,17 +19,7 @@
 						<form action="{{ route('purchasing.store') }}" method="POST">
 							@csrf
 							<div class="row">
-								<div class="col-sm-6 mb-1">
-									<label for="nomor_po" class="form-label text-capitalize">Nomor PO</label>
-									<input class="form-control @error('nomor_po') is-invalid @enderror" type="text" id="nomor_po"
-										name="nomor_po" value="{{ old('nomor_po') }}" required />
-									@error('nomor_po')
-										<div class="invalid-feedback">
-											{{ $message }}
-										</div>
-									@enderror
-								</div>
-								<div class="col-sm-6 mb-1">
+								<div class="col-sm-12 mb-1">
 									<label for="input_by" class="form-label text-capitalize">Diajukan Oleh</label>
 									<input class="form-control @error('input_by') is-invalid @enderror" type="text" id="input_by"
 										name="input_by" value="{{ Auth()->user()->name }}" readonly />

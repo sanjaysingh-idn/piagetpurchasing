@@ -39,13 +39,13 @@
 										<td class="fw-bold">Rp. {{ number_format($item->total_harga) }}</td>
 										<td class="text-uppercase">
 											@if ($item->status == 'pengajuan')
-												<span class="badge bg-label-primary me-1">{{ $item->status }}</span>
+												<span class="badge bg-label-primary me-1">Pengajuan</span>
 											@elseif ($item->status == 'verifikasi')
-												<span class="badge bg-label-warning me-1">{{ $item->status }}</span>
+												<span class="badge bg-label-warning me-1">Ditunda</span>
 											@elseif ($item->status == 'setuju')
-												<span class="badge bg-label-success me-1">{{ $item->status }}</span>
+												<span class="badge bg-label-success me-1">Didanai</span>
 											@elseif ($item->status == 'tolak')
-												<span class="badge bg-label-danger me-1">{{ $item->status }}</span>
+												<span class="badge bg-label-danger me-1">Ditolak</span>
 											@endif
 										</td>
 										<td>
@@ -54,12 +54,19 @@
 											<small>{{ $item->created_at->format('d F Y H:i') }}</small>
 										</td>
 										<td>
-											<button class="btn btn-primary btn-xs" data-bs-toggle="modal"
-												data-bs-target="#modalStatus{{ $item->id }}"><i class="bx bx-pen me-1"></i> Ubah Status</button>
-											<a class="btn btn-xs btn-warning" href="{{ route('purchasing.edit', $item->id, '.edit') }}"><i
-													class="bx bx-edit-alt me-1"></i> Edit</a>
-											<button class="btn btn-xs btn-danger" data-bs-toggle="modal"
-												data-bs-target="#modalDelete{{ $item->id }}"><i class="bx bx-trash me-1"></i> Delete</button>
+											@if (auth()->user()->role == 'bendahara')
+												<button class="btn btn-primary btn-xs" data-bs-toggle="modal"
+													data-bs-target="#modalStatus{{ $item->id }}"><i class="bx bx-pen me-1"></i> Ubah Status</button>
+
+												<a class="btn btn-xs btn-warning" href="{{ route('purchasing.edit', $item->id) }}"><i
+														class="bx bx-edit-alt me-1"></i> Edit</a>
+
+												<button class="btn btn-xs btn-danger" data-bs-toggle="modal"
+													data-bs-target="#modalDelete{{ $item->id }}"><i class="bx bx-trash me-1"></i> Delete</button>
+											@elseif(auth()->user()->role == 'staff')
+												<span class="text-muted">- No Action -</span>
+											@else
+											@endif
 										</td>
 									</tr>
 								@endforeach
@@ -149,7 +156,17 @@
 											<select class="form-select form-select-lg" name="status" id="status" required>
 												<option value="" disabled selected>--Pilih Status--</option>
 												@foreach ($status as $st)
-													<option value="{{ $st }}">{{ $st }}</option>
+													<option value="{{ $st }}">
+														@if ($st == 'verifikasi')
+															ditunda
+														@elseif($st == 'setuju')
+															didanai
+														@elseif($st == 'tolak')
+															ditolak
+														@else
+															{{ $st }} {{-- Antisipasi jika ada status lain seperti 'pengajuan' --}}
+														@endif
+													</option>
 												@endforeach
 											</select>
 									</div>
